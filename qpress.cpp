@@ -923,7 +923,7 @@ void compress_directory(string base_dir, string pattern)
 		{
 			path = api_path + string(entry->d_name);
 
-			if(is_dir(path.c_str()) && string(entry->d_name) != "." && string(entry->d_name) != "..")
+			if(is_dir(path) && string(entry->d_name) != "." && string(entry->d_name) != "..")
 			{
 				godown(entry->d_name);
 				compress_directory(path, pattern);
