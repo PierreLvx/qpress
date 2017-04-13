@@ -875,7 +875,6 @@ void compress_directory(string base_dir, string pattern)
 {
     string path;
     struct dirent *entry;
-    struct stat attribut;
 	DIR *dir;
 
 	base_dir = remove_curdir(base_dir);
