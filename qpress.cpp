@@ -95,6 +95,10 @@ and finally outputs an UPDIR:
 #include "levels.c"
 #include "utilities.hpp"
 
+#ifdef __APPLE__
+    #include <unistd.h>
+#endif
+
 using namespace std;
 
 #ifdef WINDOWS
