@@ -3,7 +3,7 @@ qpress - portable high-speed file archiver
 Copyright Lasse Reinhold 2006-2010
 GPL 1, 2 and 3 licensed.
 
-An archive file consists of "D" and "U" characters which instruct the decompressor to traverse up and down in 
+An archive file consists of "D" and "U" characters which instruct the decompressor to traverse up and down in
 directories to create a directory three. The "F" character instructs it to create a file:
 
 ARCHIVE =        ARCHIVEHEADER + (1 or more of UPDIR | DOWNDIR | FILE)
@@ -36,11 +36,11 @@ Two digit values are in hexadecimal, remaining values are printable and represen
 000080   00  00  80   t   h   e   r   e   E   N   D   S   E   N   D   S
 000090   00  00  00  00  00  00  00  00   U   U
 
-Offsets 2f - 3a and 7c - 87 are compressed packets. You see "hello" and "there" in plaintext because input is too small 
+Offsets 2f - 3a and 7c - 87 are compressed packets. You see "hello" and "there" in plaintext because input is too small
 to compress.
 
-When decompressing, decompress_directory() takes the user given destination path as argument and begins extracting 
-files into it. When a DOWNDIR is read it appends its sub directory to the path. When an UPDIR is read it removes the 
+When decompressing, decompress_directory() takes the user given destination path as argument and begins extracting
+files into it. When a DOWNDIR is read it appends its sub directory to the path. When an UPDIR is read it removes the
 deepest sub directory from the path. When a FILE is read, it calls decompress_file() which starts threads that each, in
 a loop, reads a chunk, decompresses and writes to destination file:
 
@@ -48,13 +48,13 @@ decompress_directory() --> decompress_file() --> decompress_file_thread()
                                              +-> decompress_file_thread()
                                              +-> decompress_file_thread()
 
-When compressing, compress_directory() searches for files in the path given as argument. For each file found, it calls 
-compress_file(). When a directory is found, it appends it to the path, outputs a DOWNDIR, calls itself with the new path 
+When compressing, compress_directory() searches for files in the path given as argument. For each file found, it calls
+compress_file(). When a directory is found, it appends it to the path, outputs a DOWNDIR, calls itself with the new path
 and finally outputs an UPDIR:
 
 +-> compress_directory() +-> compress_file() --> compress_file_thread()
 |                        |                   +-> compress_file_thread()
-+------------------------+                   +-> compress_file_thread()                                           
++------------------------+                   +-> compress_file_thread()
 
 */
 
@@ -63,13 +63,13 @@ and finally outputs an UPDIR:
 #define DEFAULT_COMPRESS_CHUNK_SIZE (64*1024)
 
 // Data compressed with a specific chunk size requires 2 * (chunk size) * (thread count) memory to
-// decompress (32 MiB requires 128 MiB with the default 2 threads), so we should limit it for 
+// decompress (32 MiB requires 128 MiB with the default 2 threads), so we should limit it for
 // archives to be able to decompress on systems with little memory
 #define MAX_COMPRESS_CHUNK_SIZE (32*1024*1024)
 
 // Can be increased to any value - we just need this constant for some static arrays
 #define MAX_THREAD_COUNT 256
-  
+
 // Too many threads can decrease throughput because of overheads and can also starve other processes
 #define DEFAULT_THREAD_COUNT 2
 #define DEFAULT_COMPRESSION_LEVEL 1
@@ -80,8 +80,8 @@ and finally outputs an UPDIR:
 // is 400 bytes regardless of input size, even for gigabyte range.
 #define QLZ_SIZE_OVERHEAD 400
 
-// Benchmark with -m flag uses 18.2 timer and must be executed in a loop for a large BENCHMARK_MILLISECONDS 
-// to be accurate. To avoid interruptions and disturbions from OS and other applications, do it BENCHMARK_BESTOF 
+// Benchmark with -m flag uses 18.2 timer and must be executed in a loop for a large BENCHMARK_MILLISECONDS
+// to be accurate. To avoid interruptions and disturbions from OS and other applications, do it BENCHMARK_BESTOF
 // times and pick the best.
 #define BENCHMARK_MILLISECONDS 3000
 #define BENCHMARK_BESTOF 3
@@ -135,7 +135,7 @@ using namespace std;
     #define LONGLONG "%lld"
 #endif
 
-typedef struct 
+typedef struct
 {
     string path;
     string pattern;
@@ -256,7 +256,7 @@ void parse_flags(int argc, char* argv[])
     string *arg = new string[argc];
     string flags;
 
-    for(int i = 0; i < argc; i++) 
+    for(int i = 0; i < argc; i++)
         arg[i] = argv[i];
 
     if(argc > 1 && arg[1].substr(0, 1) == "-")
@@ -296,7 +296,7 @@ void parse_flags(int argc, char* argv[])
         {
             switch(int_flag(arg[1], "P"))
             {
-                case 1: 
+                case 1:
 					if (!SetPriorityClass(GetCurrentProcess(), PROCESS_MODE_BACKGROUND_BEGIN))
 					{
 						PRINT(WARNING, "%s%s: -P1 not supported by this OS - using -P2 instead\n", BLANK_LINE, "qpress");
@@ -351,7 +351,7 @@ void parse_flags(int argc, char* argv[])
 void print_usage()
 {
     string arch;
-    string usage = 
+    string usage =
     "Compression:\n"
     "    qpress [-rovfCBPLKT] <source file/dir search pattern> <destination file>\n"
     "    qpress -i[ovfBPLKT] <filename to give stdin data> <destination file>\n\n"
@@ -380,7 +380,7 @@ void print_usage()
     "         prevent cache of other applications from being be flushed. Keep\n"
     "         enabled if files are small and need further processing\n"
     "    -Pn  Windows only: Set CPU and disk I/O priority to n where 1 = BACKGORUND\n"
-	"         (Vista, 7, 2008 only), 2 = IDLE, 3 = NORMAL or 4 = ABOVE (default = 3)\n\n"                                                         
+	"         (Vista, 7, 2008 only), 2 = IDLE, 3 = NORMAL or 4 = ABOVE (default = 3)\n\n"
     "Examples of compression:\n"
 #ifdef WINDOWS
     "    qpress -rv d:\\dir\\* database.qp\n"
@@ -412,7 +412,7 @@ void print_usage()
     "It's recommended to use .qp as filename suffix.\n";
     PRINT(FATAL_ERROR, "qpress 1.1 - Copyright 2006-2010 Lasse Reinhold - www.quicklz.com\n");
     PRINT(FATAL_ERROR, "Using QuickLZ 1.4.1 compression library\n");
- 
+
 	PRINT(FATAL_ERROR, "Compiled for: ");
 	#ifdef WINDOWS
 		PRINT(FATAL_ERROR, "[Windows] *nix    ");
@@ -430,7 +430,7 @@ void print_usage()
 		PRINT(FATAL_ERROR, "32-bit [64-bit]");
 	else
 		PRINT(FATAL_ERROR, "[32-bit] 64-bit");
-	
+
     PRINT(FATAL_ERROR, "\n\n%s", usage.c_str());
 	exit(-1);
 }
@@ -536,7 +536,7 @@ void benchmark(char *source_file)
     }
 
     bench_size = file_len;
-       
+
 	for(int j = 0; j < BENCHMARK_BESTOF; j++)
 	{
 		double tmp_speed = 0.;
@@ -573,7 +573,7 @@ void benchmark(char *source_file)
 			speed = tmp_speed;
 	}
 
-	PRINT(FATAL_ERROR, "Decompressed at %.1f MiB/s\n", speed); 
+	PRINT(FATAL_ERROR, "Decompressed at %.1f MiB/s\n", speed);
 }
 
 void update_statusbar(string description, bool force_update)
@@ -583,7 +583,7 @@ void update_statusbar(string description, bool force_update)
     static pthread_mutex_t mu = PTHREAD_MUTEX_INITIALIZER;
     unsigned int t = GetTickCount() - last_tick;
     unsigned int s = GetTickCount() - last_speed_tick;
-    
+
     pthread_mutex_lock(&mu);
 
     if (s > 3000)
@@ -658,7 +658,7 @@ void *decompress_file_thread(void *arg)
         size_t decomp_size;
 
         pthread_mutex_lock(&disk_read_mutex);
-        update_statusbar("d", false); 
+        update_statusbar("d", false);
 
         if (end_of_file)
         {
@@ -670,7 +670,7 @@ void *decompress_file_thread(void *arg)
         {
             // read NEWBNEWB or ENDSENDS
             try_aread(src[thread_id], 1);
-            try_aread(tmp, 7); 
+            try_aread(tmp, 7);
         }
 
         if (*src[thread_id] == 'N') // NEWBNEWB
@@ -678,7 +678,7 @@ void *decompress_file_thread(void *arg)
             fread64(); // reset pos
         }
         else if(*src[thread_id] == 'E') // ENDSENDS
-        {    
+        {
             end_of_file = true;
             try_aread(tmp, 8); // reset pos
             files++;
@@ -709,11 +709,11 @@ void *decompress_file_thread(void *arg)
         }
         decomp_size = QLZ_DECOMPRESS(src[thread_id], dst[thread_id], scratch[thread_id]);
 
-        // Could be beautified into not using yield. Schedules writes to occur in correct order. 
+        // Could be beautified into not using yield. Schedules writes to occur in correct order.
         for(;;)
         {
-            pthread_mutex_lock(&disk_write_mutex);          
-            if(my_chunk == chunks_written) 
+            pthread_mutex_lock(&disk_write_mutex);
+            if(my_chunk == chunks_written)
                 break;
             else
             {
@@ -728,7 +728,7 @@ void *decompress_file_thread(void *arg)
             recovery_file_written += decomp_size;
             try_awrite(dst[thread_id], decomp_size);
         }
-        pthread_mutex_unlock(&disk_write_mutex);        
+        pthread_mutex_unlock(&disk_write_mutex);
     }
     return 0;
 }
@@ -750,7 +750,7 @@ void decompress_file(string dest_file)
 
     for(i = 0; i < threads; i++)
         pthread_join(thread[i], &status);
-	  
+
 	if(dest_file != "<stdout>")
 		aclose_write();
 }
@@ -770,10 +770,10 @@ void *compress_file_thread(void *arg)
         my_chunk = chunks_read;
         chunks_read++;
 
-        pthread_mutex_lock(&disk_read_mutex);        
+        pthread_mutex_lock(&disk_read_mutex);
         pthread_mutex_unlock(&disk_write_mutex);
         read = aread(src[thread_id], compress_chunk_size);
-        pthread_mutex_unlock(&disk_read_mutex);        
+        pthread_mutex_unlock(&disk_read_mutex);
 
         if (read == 0)
             return 0;
@@ -784,8 +784,8 @@ void *compress_file_thread(void *arg)
         // Could be beautified into not using yield. Schedules writes to occur in correct order.
         for(;;)
         {
-            pthread_mutex_lock(&disk_write_mutex);          
-            if(my_chunk == chunks_written) 
+            pthread_mutex_lock(&disk_write_mutex);
+            if(my_chunk == chunks_written)
                 break;
             else
             {
@@ -795,13 +795,13 @@ void *compress_file_thread(void *arg)
         }
 
         try_awrite("NEWBNEWB", 8);
-        fwrite64(current_file_payload); 
+        fwrite64(current_file_payload);
         payload_counter += read;
         current_file_payload += read;
         fwrite32(crc_r);
         chunks_written++;
         try_awrite(dst[thread_id], u);
-        pthread_mutex_unlock(&disk_write_mutex);  
+        pthread_mutex_unlock(&disk_write_mutex);
     } while (read == compress_chunk_size);
 
     return 0;
@@ -883,13 +883,13 @@ void compress_directory(string base_dir, string pattern)
 	string api_path = (base_dir == "" ? "" : remove_delimitor(base_dir) + DELIM_STR);
 
 	if(base_dir != "")
-		PRINT(FILES_PROCESSED, "%s%s%s\n", BLANK_LINE, base_dir.c_str(), DELIM_STR); 
+		PRINT(FILES_PROCESSED, "%s%s%s\n", BLANK_LINE, base_dir.c_str(), DELIM_STR);
 
 	// process files
 	if((dir = opendir(void2curdir(api_path).c_str())))
 	{
 #ifdef WINDOWS
-        while((entry = readdir_wildcard(dir, (char *)pattern.c_str()))) 
+        while((entry = readdir_wildcard(dir, (char *)pattern.c_str())))
 #else
         while((entry = readdir(dir)))
 #endif
@@ -901,7 +901,7 @@ void compress_directory(string base_dir, string pattern)
 				{
 					// we must avoid including destination file when compressing. Note that *nix is case sensitive.
 					absolute_path((char *)path.c_str(), tmp);
-#ifdef WINDOWS 
+#ifdef WINDOWS
 					if(lcase(string(tmp)) != lcase(destination_file))
 #else
 					if(string(tmp) != destination_file)
@@ -914,17 +914,17 @@ void compress_directory(string base_dir, string pattern)
 	}
 
 
-	
+
 	// process directories
-    if(recursive_flag && (dir = opendir(void2curdir(api_path).c_str()))) 
+    if(recursive_flag && (dir = opendir(void2curdir(api_path).c_str())))
 	{
 #ifdef WINDOWS
-        while((entry = readdir_wildcard(dir, "*"))) 
+        while((entry = readdir_wildcard(dir, "*")))
 #else
         while((entry = readdir(dir)))
 #endif
 		{
-			path = api_path + string(entry->d_name);        
+			path = api_path + string(entry->d_name);
 
 			if(is_dir(path.c_str()) && string(entry->d_name) != "." && string(entry->d_name) != "..")
 			{
@@ -954,7 +954,7 @@ void decompress_directory(string extract_dir, bool std_out)
             return;
 
         if(c == 'D')
-        {       
+        {
 			// read directory name, append it to current path and create the directory
             chunk_size = fread32();
             try_aread(tmp, chunk_size + 1);
@@ -964,9 +964,9 @@ void decompress_directory(string extract_dir, bool std_out)
             {
 #ifdef WINDOWS
                 CreateDirectory(curdir.c_str(), 0);
-#else           
+#else
                 mkdir(curdir.c_str(), 509);
-#endif 
+#endif
             }
         }
         else if(c == 'U')
@@ -980,7 +980,7 @@ void decompress_directory(string extract_dir, bool std_out)
             if(!std_out)
             {
                 if(exists(buf2) && !force_flag)
-                    abort("Destination file '%s' already exists - aborted", buf2.c_str());                
+                    abort("Destination file '%s' already exists - aborted", buf2.c_str());
                 else
                     decompress_file(buf2);
             }
@@ -1005,7 +1005,7 @@ string filenamepart(string filenamepath)
 search_type split(string source)
 {
     search_type ret;
-	
+
 	if(is_dir(source))
 	{
 		ret.path = source;
@@ -1035,7 +1035,7 @@ search_type split(string source)
 int main(int argc, char* argv[])
 {
     string *arg = new string[argc];
-    for(int i = 0; i < argc; i++) 
+    for(int i = 0; i < argc; i++)
         arg[i] = argv[i];
 
     parse_flags(argc, argv);
@@ -1094,7 +1094,7 @@ int main(int argc, char* argv[])
 
         mem_init(compress_chunk_size);
 
-        if(output_pipe)     
+        if(output_pipe)
             decompress_directory("", true);
         else
         {
@@ -1105,15 +1105,15 @@ int main(int argc, char* argv[])
         aclose_read();
         if(recover_flag)
         {
-            PRINT(RESULT, "%sWrote %s bytes in %s file(s) of which %s bytes are bad\n", BLANK_LINE, delimiter(payload_counter + recovery_bad_bytes).c_str(), delimiter(files).c_str(), delimiter(recovery_bad_bytes).c_str());        
-            PRINT(RESULT, "\nNote: There may be more errors than listed. Files may be missing or placed\nin wrong directories and files may contain fragments of other files."); 
+            PRINT(RESULT, "%sWrote %s bytes in %s file(s) of which %s bytes are bad\n", BLANK_LINE, delimiter(payload_counter + recovery_bad_bytes).c_str(), delimiter(files).c_str(), delimiter(recovery_bad_bytes).c_str());
+            PRINT(RESULT, "\nNote: There may be more errors than listed. Files may be missing or placed\nin wrong directories and files may contain fragments of other files.");
         }
         else
-            PRINT(RESULT, "%sWrote %s bytes in %s file(s).", BLANK_LINE, delimiter(payload_counter).c_str(), delimiter(files).c_str()); 
+            PRINT(RESULT, "%sWrote %s bytes in %s file(s).", BLANK_LINE, delimiter(payload_counter).c_str(), delimiter(files).c_str());
     }
 
 // Compress
-// =================================================================================================    
+// =================================================================================================
     else if(!decompress_flag && argc >= 2 + flags_exist + (1 - output_pipe))
     {
         string output_file;
@@ -1148,11 +1148,11 @@ int main(int argc, char* argv[])
 				if (!is_dir(arg[i]))
 					compress_file(arg[i], filenamepart(arg[i]));
 			}
-			
+
 			if(recursive_flag)
 			{
 				for(int i = 1 + flags_exist; i < argc - ((!output_pipe)== true ? 1 : 0); i++)
-				{					
+				{
 					if(is_dir(arg[i]))
 					{
 						arg[i] = remove_delimitor(arg[i]);
@@ -1173,7 +1173,7 @@ int main(int argc, char* argv[])
         {
             compress_file("<stdin>", arg[1 + flags_exist]);
         }
-           
+
 		if(files == 0)
 			abort("0 files found. Are you missing a search pattern such as '*'?");
 		else
