@@ -20,7 +20,7 @@ using namespace std;
 
 #ifndef WINDOWS
 unsigned int GetTickCount()
-{ 
+{
        struct timeval tv;
        gettimeofday( &tv, NULL );
        return (unsigned int)(tv.tv_sec * 1000 + tv.tv_usec / 1000);
@@ -34,16 +34,6 @@ char *absolute_path(char *source, char *destination)
 #else
 	return realpath(source, destination);
 #endif
-}
-
-string ucase(string str)
-{
-	//change each element of the string to upper case
-   for(unsigned int i=0;i<str.length();i++)
-   {
-      str[i] = toupper(str[i]);
-   }
-   return str;
 }
 
 string lcase(string str)
@@ -98,7 +88,7 @@ void itoa(int n, char s[])
         s[i++] = '-';
     s[i] = '\0';
     reverse(s);
-} 
+}
 
 
 void *aligned_malloc(size_t size, size_t alignment)
@@ -133,7 +123,7 @@ void *aligned_realloc(void *ptr, size_t size, size_t alignment)
     return p;
 }
 
-unsigned int adler(unsigned char *data, size_t len, unsigned int crc) 
+unsigned int adler(unsigned char *data, size_t len, unsigned int crc)
 {
     unsigned int a = crc >> 16;
     unsigned int b = crc & 0xffff;
@@ -141,15 +131,15 @@ unsigned int adler(unsigned char *data, size_t len, unsigned int crc)
     {
         size_t tlen = len > 5550 ? 5550 : len;
         len -= tlen;
-        do 
+        do
         {
             a += *data++;
             b += a;
         } while (--tlen);
- 
+
         a %= 65521;
         b %= 65521;
-    } 
+    }
     return (b << 16) | a;
 }
 
@@ -185,7 +175,7 @@ string remove_delimitor(string path)
 }
 
 
-bool is_dir(string path) 
+bool is_dir(string path)
 {
     struct stat st_ifile;
 #ifdef WINDOWS
@@ -220,11 +210,11 @@ bool is_dir(string path)
 
 }
 
-string str(int intValue) 
-{ 
-    char myBuff[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; 
-    itoa(intValue,myBuff); 
-    return((string)myBuff); 
+string str(int intValue)
+{
+    char myBuff[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    itoa(intValue,myBuff);
+    return((string)myBuff);
 }
 
 string delimiter(long long l)
@@ -233,7 +223,7 @@ string delimiter(long long l)
     unsigned int i, j = 0;
 
     memset(s, 0, 25);
-    memset(d, 0, 25);    
+    memset(d, 0, 25);
 #ifdef WINDOWS
     sprintf(s, "%I64d", l);
 #else
@@ -248,7 +238,7 @@ string delimiter(long long l)
         }
         d[j] = s[i];
         j++;
-    }    
+    }
     return string(d);
 }
 
