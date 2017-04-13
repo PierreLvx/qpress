@@ -9,7 +9,7 @@ FILE_FLAG_NO_BUFFERING file I/O on Windows requires source address, destination 
 transfer size to be sector aligned.
 
 This library creates a read buffer (read_buffer), write buffer (write_buffer) and an aligned
-intermediate transfer buffer (io_commit) and issues requests to the Windows API in multipla of 
+intermediate transfer buffer (io_commit) and issues requests to the Windows API in multipla of
 AIO_MAX_SECTOR_SIZE in size.
 
 The user first needs to call aio_init() with the largest transfer the user expects to take place
@@ -25,11 +25,6 @@ aio_init() is called with buffered_io = true.
 #include "utilities.hpp"
 
 #define _CRT_SECURE_NO_WARNINGS
-
-#include "utilities.hpp"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 
 #ifdef WINDOWS
     #define handle_type HANDLE
@@ -78,13 +73,13 @@ bool aio_init(size_t largest_request, bool buffered_io)
         {
             abort("Error allocating memory - decrease -T and -K flags");
         }
-    }    
+    }
     return true;
 }
 
 
 size_t FREAD(void *DstBuf, size_t Count, handle_type File)
-{    
+{
 #ifdef WINDOWS
     size_t cn = 0;
     DWORD read = 1;
@@ -103,7 +98,7 @@ size_t FREAD(void *DstBuf, size_t Count, handle_type File)
 
 
 size_t aread(void *dst, size_t size)
-{  
+{
 #ifdef WINDOWS
     if(buffering)
     {
@@ -228,10 +223,10 @@ __int64 myFileSeek (HANDLE hf, __int64 distance, DWORD MoveMethod)
 #endif
 
 size_t awrite(const void *src, size_t size)
-{   
+{
 #ifdef WINDOWS
     if(buffering)
-    {    
+    {
 #ifdef PRE_ALLOCATE
         if(written > last_extended_to)
         {
@@ -258,7 +253,7 @@ size_t awrite(const void *src, size_t size)
         size_t wrote = FWRITE(write_buffer, n*AIO_MAX_SECTOR_SIZE, ofile);
         queued -= n*AIO_MAX_SECTOR_SIZE;
         memmove(write_buffer, write_buffer + n*AIO_MAX_SECTOR_SIZE, queued);
-        if (wrote != n*AIO_MAX_SECTOR_SIZE) 
+        if (wrote != n*AIO_MAX_SECTOR_SIZE)
             return 0;
         return size;
     }
@@ -271,7 +266,7 @@ size_t awrite(const void *src, size_t size)
 
 unsigned long long awritten(void)
 {
-    return written;    
+    return written;
 }
 
 
@@ -287,7 +282,7 @@ bool aclose_write(void)
         if(ofile == INVALID_HANDLE_VALUE)
             return false;
         myFileSeek(ofile, awritten(), SEEK_CUR);
-        SetEndOfFile(ofile);  
+        SetEndOfFile(ofile);
 #endif
         return CloseHandle(ofile) != 0;
     }
@@ -437,6 +432,3 @@ void adelete_write(void)
     remove(destination_file);
 #endif
 }
-
-
-
