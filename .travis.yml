@@ -7,3 +7,6 @@ osx_image: xcode8.3
 
 script:
   - make
+
+after_script:
+  - ./qpress
