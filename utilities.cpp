@@ -36,7 +36,7 @@ char *absolute_path(char *source, char *destination)
 #endif
 }
 
-string lcase(string str)
+string lcase(string &str)
 {
 	//change each element of the string to lower case
 	string s = str;
