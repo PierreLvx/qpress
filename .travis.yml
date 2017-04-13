@@ -1,0 +1,9 @@
+os:
+  - osx
+
+language: cpp
+
+osx_image: xcode8.3
+
+script:
+  - make
