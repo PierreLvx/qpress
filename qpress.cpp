@@ -254,7 +254,6 @@ int int_flag(string arg, string flag)
 void parse_flags(int argc, char* argv[])
 {
     string *arg = new string[argc];
-    string flags;
 
     for(int i = 0; i < argc; i++)
         arg[i] = argv[i];
@@ -350,7 +349,6 @@ void parse_flags(int argc, char* argv[])
 
 void print_usage()
 {
-    string arch;
     string usage =
     "Compression:\n"
     "    qpress [-rovfCBPLKT] <source file/dir search pattern> <destination file>\n"
