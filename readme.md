@@ -1,5 +1,7 @@
 # qpress - Portable high-speed file archiver
 
+[![Build Status](https://travis-ci.org/PierreLvx/qpress.svg?branch=master)](https://travis-ci.org/PierreLvx/qpress)
+
 This repo is a copy of the latest [publicly available](http://www.quicklz.com/) version of `qpress`, with patches for it to compile on Mac OS.
 
 It has only been tested on Mac OS 10.12.4, built with `clang-802.0.38`.
