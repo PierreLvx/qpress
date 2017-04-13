@@ -1,9 +1,15 @@
-os:
-  - osx
-
 language: cpp
 
-osx_image: xcode8.3
+matrix:
+  include:
+    - os: linux
+      dist: xenial
+      sudo: required
+    - os: osx
+      osx_image: xcode8.3
+
+compiler:
+  - gcc
 
 script:
   - make
