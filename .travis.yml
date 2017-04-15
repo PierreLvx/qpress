@@ -2,11 +2,14 @@ language: cpp
 
 matrix:
   include:
-    - os: linux
-      dist: xenial
-      sudo: required
-    - os: osx
-      osx_image: xcode8.3
+  - os: linux
+    dist: xenial
+    sudo: required
+  - os: linux
+    dist: jessie
+    sudo: required
+  - os: osx
+    osx_image: xcode8.3
 
 compiler:
   - gcc
@@ -15,4 +18,16 @@ script:
   - make
 
 after_script:
-  - ./qpress
+  - "./qpress"
+  - "tar -zcvf qpress.tar.gz qpress"
+
+deploy:
+  provider: releases
+  api_key:
+    secure: FNRtg5vW9hj6dxRpZBjrVaDjxI62qGnC7UU3ToDDUu9aYDBN3JbFptEbrJAt6dtJOI4kP8j85HkL+sHYSYR8t+K2Q4zUCP/lp/XsrNCWFEp472L6n5bKT0dWhHgKOxyzM3w6mqBDo0Xu7IbSmtFGuz+9tC4bNsV+cJ0+opCziJ3AIwLAyvmVmwr42tWGdosUg+wYYAHoMyTrYJKue4ACjjk1Sm/RkSeZ6ixTow+2lmekGO7GmKU7JZ7U2brzuk5db+i0nhKf5qRewD0hyG/+0TH8svhSdlmJlOmBIjq76SLUa+NP0Q5RaFHtK9XDYB1LRSOizjFxwdZbhtVD5h40+PpDjrZILdF0lIbeBUl49PWraf2c1vIV0t8RA/4V0Re+/NMdg63ZxXr42vfXzgYeYvI4w0J2lxH+5ZjHyKOS2DgDk/mUYBfZqiBuE72QisnKBXyCZAZZ/NgwEPaLyvC7Bl8EdwWIhuSrdHhJvvj0aBkq5AOFyADEzDfUK6j6Mh6sVhKNSg8TfONraYY0n9PxC1MWGzYTYGJARoCmVswmTqiTgupXJpG2UmEv3jbUBj/JrWLtTMjlK41SWWEotMHGltX0QRennHbH1u0HWY1rCjX28y+VVf6iWVIT2ha9vFooSHD9YOAZ3rZEeisR9CxWvNGqDXAdMgHAVz9RXDBLNGQ=
+  file: qpress.tar.gz
+  skip_cleanup: true
+  on:
+    repo: PierreLvx/qpress
+    tags: true
+    condition: $TRAVIS_OS_NAME = osx
