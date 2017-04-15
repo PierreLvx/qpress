@@ -17,8 +17,10 @@ compiler:
 script:
   - make
 
-after_script:
+after_success:
   - "./qpress"
+
+before_deploy:
   - "tar -zcvf qpress.tar.gz qpress"
 
 deploy:
