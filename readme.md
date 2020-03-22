@@ -4,7 +4,7 @@
 
 This repo is a copy of the latest [publicly available](http://www.quicklz.com/) version of `qpress`, with patches for it to compile on Mac OS.
 
-It has been tested on Mac OS 10.12.4 with `clang-802.0.38`. Automated builds for Ubuntu 14.04 and 16.04 are done to prevent regressions. I am unable to provide builds on Windows.
+It has been tested on Mac OS 10.15.3 with `clang-1100.0.33.16`. Automated builds for Ubuntu 16.04 and 18.04 are done to prevent regressions. I am unable to provide builds on Windows.
 
 Pull requests are welcome.
 
