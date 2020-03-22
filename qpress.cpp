@@ -744,10 +744,14 @@ void decompress_file(string dest_file)
 	try_aopen(dest_file.c_str(), 'w');
 
     for(i = 0; i < threads; i++)
+    {
         pthread_create(&thread[i], NULL, decompress_file_thread, (void *)i);
+    }
 
     for(i = 0; i < threads; i++)
+    {
         pthread_join(thread[i], &status);
+    }
 
 	if(dest_file != "<stdout>")
 		aclose_write();
