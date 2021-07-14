@@ -12,11 +12,13 @@ matrix:
     dist: xenial
     sudo: required
   - os: osx
-    osx_image: xcode9.4
+    osx_image: xcode10.1 # Mac OS 10.13
   - os: osx
-    osx_image: xcode11.6
+    osx_image: xcode11.3 # Max OS 10.14.6
   - os: osx
-    osx_image: xcode12.2
+    osx_image: xcode12.2 # Max OS 10.15.7
+  - os: osx
+    osx_image: xcode12.5 #Mac OS 11.3
 
 compiler:
   - gcc
