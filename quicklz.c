@@ -288,7 +288,7 @@ static size_t qlz_compress_core(const unsigned char *source, unsigned char *dest
 #ifdef X86X64
 				fetch = fast_read(src, 3);
 #else
-				fetch = fetch >> 8 & 0xffff | *(src + 2) << 16;
+				fetch = (fetch >> 8 & 0xffff) | *(src + 2) << 16;
 #endif
 			}
 		}
