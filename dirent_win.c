@@ -7,6 +7,7 @@
 #include <sys/stat.h>
 #include <string.h>
 #include <malloc.h>
+#include <stdlib.h>
 #include "dirent_win.h"
 
 struct DIR
