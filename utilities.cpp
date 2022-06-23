@@ -1,19 +1,15 @@
 
-#include <sys/types.h>
 #include <sys/stat.h>
 #include <string>
 #include <string.h>
 #include <stdio.h>
-#include <stdarg.h>
 #include <stdlib.h>
 #include "utilities.hpp"
 
 #ifdef WINDOWS
   #include <windows.h>
 #else
-  #include <sys/stat.h>
   #include <sys/time.h>
-  #include <sys/types.h>
 #endif
 
 using namespace std;

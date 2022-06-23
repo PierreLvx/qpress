@@ -24,9 +24,7 @@ aio_init() is called with buffered_io = true.
 #include "aio.hpp"
 #include "utilities.hpp"
 
-#include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
 
 #define _CRT_SECURE_NO_WARNINGS
 

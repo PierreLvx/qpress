@@ -111,9 +111,6 @@ using namespace std;
 #else
   #include "dirent.h"
   #include <pthread.h>
-  #include <sys/stat.h>
-  #include <sys/time.h>
-  #include <sys/types.h>
 #endif
 
 #if QLZ_STREAMING_BUFFER != 0
