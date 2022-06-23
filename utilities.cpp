@@ -1,6 +1,7 @@
 
 #include <sys/stat.h>
 #include <string>
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "utilities.hpp"
