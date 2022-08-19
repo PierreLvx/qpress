@@ -3,6 +3,9 @@ language: cpp
 matrix:
   include:
   - os: linux
+    dist: jammy
+    sudo: required
+  - os: linux
     dist: focal
     sudo: required
   - os: linux
