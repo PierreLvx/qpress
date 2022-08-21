@@ -2,11 +2,9 @@
 
 [![Build Status](https://www.travis-ci.com/PierreLvx/qpress.svg?branch=master)](https://www.travis-ci.com/PierreLvx/qpress)
 
-This repo is a copy of the latest [publicly available](http://www.quicklz.com/) version of `qpress`, with patches several patches, including MacOS compatibility.
+This repo is a copy of the latest [publicly available](http://www.quicklz.com/) version of `qpress`, with several patches, including MacOS compatibility.
 
 Please see the Travis CI build matrix for a list of tested build environments.
-
-I am unable to provide builds on Windows.
 
 Pull requests are welcome.
 
