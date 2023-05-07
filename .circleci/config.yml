@@ -2,11 +2,11 @@ version: 2.1
 
 jobs:
   build:
-    macos:
-      xcode: << parameters.xcode-version >>
     parameters:
       xcode_version:
         type: string
+    macos:
+      xcode: << parameters.xcode_version >>
     steps:
       - checkout
       - run: make
@@ -14,7 +14,7 @@ jobs:
 workflows:
   test:
     jobs:
-      - build
+      - build:
           matrix:
             parameters:
-              xcode-version: [14.3.0, 14.2.0, 14.1.0]
+              xcode_version: [14.3.0, 14.2.0, 14.1.0]
