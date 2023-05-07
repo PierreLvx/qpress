@@ -9,7 +9,12 @@ jobs:
       xcode: << parameters.xcode_version >>
     steps:
       - checkout
-      - run: make
+      - run:
+          name: Makefile
+          command: make
+      - run:
+          name: Test executable
+          command: ./qpress
 
   build-linux:
     parameters:
@@ -19,7 +24,12 @@ jobs:
       image: << parameters.image >>
     steps:
       - checkout
-      - run: make
+      - run:
+          name: Makefile
+          command: make
+      - run:
+          name: Test executable
+          command: ./qpress
 
 workflows:
   test-macos:
