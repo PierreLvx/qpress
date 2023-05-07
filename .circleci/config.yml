@@ -14,7 +14,7 @@ jobs:
           command: make
       - run:
           name: Test executable
-          command: ./qpress
+          command: ./qpress -v readme.md readme.qp
 
   build-linux:
     parameters:
@@ -29,7 +29,7 @@ jobs:
           command: make
       - run:
           name: Test executable
-          command: ./qpress
+          command: ./qpress -v readme.md readme.qp
 
 workflows:
   test-macos:
