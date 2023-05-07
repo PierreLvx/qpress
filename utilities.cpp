@@ -223,7 +223,7 @@ string delimiter(long long l)
 #ifdef WINDOWS
     sprintf(s, "%I64d", l);
 #else
-    sprintf(s, "%lld", l);
+    snprintf(s, sizeof(s), "%lld", l);
 #endif
     for(i = 0; i < strlen(s); i++)
     {
