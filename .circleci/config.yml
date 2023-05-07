@@ -41,4 +41,4 @@ workflows:
       - build-linux:
           matrix:
             parameters:
-              image: [ubuntu-2204, ubuntu-2004]
+              image: [ubuntu-2204:current, ubuntu-2004:current]
