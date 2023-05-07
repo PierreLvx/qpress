@@ -1,0 +1,52 @@
+version: 2.1
+
+jobs:
+  build-macos:
+    parameters:
+      xcode_version:
+        type: string
+    macos:
+      xcode: << parameters.xcode_version >>
+    steps:
+      - checkout
+      - run:
+          name: Makefile
+          command: make
+      - run:
+          name: Test executable
+          command: ./qpress -v readme.md readme.qp
+
+  build-linux:
+    parameters:
+      image:
+        type: string
+    machine:
+      image: << parameters.image >>
+    steps:
+      - checkout
+      - run:
+          name: Makefile
+          command: make
+      - run:
+          name: Test executable
+          command: ./qpress -v readme.md readme.qp
+
+workflows:
+  test-macos:
+    jobs:
+      - build-macos:
+          matrix:
+            parameters:
+              xcode_version: [
+                14.2.0,   # macOS 12.6
+                14.1.0,   # macOS 12.5.1
+                13.4.1,   # macOS 12.3.1
+                13.2.1,   # macOS 11.6.2
+                11.7.0    # macOS 10.15.5
+                ]
+  test-linux:
+    jobs:
+      - build-linux:
+          matrix:
+            parameters:
+              image: [ubuntu-2204:current, ubuntu-2004:current]
