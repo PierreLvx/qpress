@@ -3,8 +3,7 @@ version: 2.1
 jobs:
   build:
     macos:
-      xcode: 14.2.0
-
+      xcode: << parameters.xcode-version >>
     steps:
       - checkout
       - run: make
@@ -13,3 +12,6 @@ workflows:
   test:
     jobs:
       - build
+          matrix:
+            parameters:
+              xcode-version: [14.3.0, 14.2.0, 14.1.0]
