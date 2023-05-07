@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  build:
+  build-macos:
     parameters:
       xcode_version:
         type: string
@@ -11,10 +11,20 @@ jobs:
       - checkout
       - run: make
 
+  build-linux:
+    parameters:
+      image:
+        type: string
+    machine:
+      image: << parameters.image >>
+    steps:
+      - checkout
+      - run: make
+
 workflows:
   test:
     jobs:
-      - build:
+      - build-macos:
           matrix:
             parameters:
               xcode_version: [
@@ -27,3 +37,8 @@ workflows:
                 12.5.1,   # macOS 11.4.0
                 11.7.0    # macOS 10.15.5
                 ]
+
+      - build-linux:
+          matrix:
+            parameters:
+              image: [ubuntu-2204, ubuntu-2004]
