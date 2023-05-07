@@ -4,6 +4,9 @@ jobs:
   build:
     macos:
       xcode: << parameters.xcode-version >>
+    parameters:
+      xcode_version:
+        type: string
     steps:
       - checkout
       - run: make
