@@ -95,7 +95,7 @@ and finally outputs an UPDIR:
 #include "levels.c"
 #include "utilities.hpp"
 
-#if defined(__APPLE__) || defined(__linux__)
+#if defined(__APPLE__) || defined(__linux__) || defined(__FreeBSD__)
     #include <unistd.h>
 #endif
 
