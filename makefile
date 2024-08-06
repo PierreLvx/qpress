@@ -6,4 +6,7 @@ g++:	qpress.cpp aio.cpp quicklz.c utilities.cpp
 install: qpress
 	install -m 0755 qpress $(PREFIX)/bin
 
-.PHONY: install g++
+clean:
+	rm -f qpress
+
+.PHONY: clean install g++
