@@ -38,15 +38,14 @@ workflows:
           matrix:
             parameters:
               xcode_version: [
-                14.2.0,   # macOS 12.6
-                14.1.0,   # macOS 12.5.1
-                13.4.1,   # macOS 12.3.1
-                13.2.1,   # macOS 11.6.2
-                11.7.0    # macOS 10.15.5
+                15.4.0,   # macOS 14+
+                14.3.1,   # macOS 13+
+                13.4.1,   # macOS 12+
+                12.5.1    # macOS 11+
                 ]
   test-linux:
     jobs:
       - build-linux:
           matrix:
             parameters:
-              image: [ubuntu-2204:current, ubuntu-2004:current]
+              image: [ubuntu-2404:current, ubuntu-2204:current, ubuntu-2004:current]
