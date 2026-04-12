@@ -34,3 +34,23 @@ jobs:
         run: make
       - name: Test
         run: ./qpress -v readme.md readme.qp
+
+  build-windows:
+    strategy:
+      matrix:
+        os:
+          - windows-2019
+          - windows-2022
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          install: mingw-w64-x86_64-gcc make
+      - name: Build
+        shell: msys2 {0}
+        run: g++ -O3 -DWINDOWS -o qpress.exe -x c quicklz.c -x c++ qpress.cpp aio.cpp utilities.cpp dirent_win.c -lpthread -Wall -Wextra -Werror
+      - name: Test
+        shell: msys2 {0}
+        run: ./qpress.exe -v readme.md readme.qp
