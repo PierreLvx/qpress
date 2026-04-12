@@ -1,0 +1,36 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-macos:
+    strategy:
+      matrix:
+        os:
+          - macos-12   # Xcode 13.4.1
+          - macos-13   # Xcode 14.3.1
+          - macos-14   # Xcode 15.4.0
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: make
+      - name: Test
+        run: ./qpress -v readme.md readme.qp
+
+  build-linux:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-20.04
+          - ubuntu-22.04
+          - ubuntu-24.04
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: make
+      - name: Test
+        run: ./qpress -v readme.md readme.qp
