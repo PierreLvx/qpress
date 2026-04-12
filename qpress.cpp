@@ -92,6 +92,7 @@ and finally outputs an UPDIR:
 #include "aio.hpp"
 #include <stdarg.h>
 #include <string>
+#include <vector>
 #include "levels.c"
 #include "utilities.hpp"
 
@@ -252,10 +253,7 @@ int int_flag(string arg, string flag)
 
 void parse_flags(int argc, char* argv[])
 {
-    string *arg = new string[argc];
-
-    for(int i = 0; i < argc; i++)
-        arg[i] = argv[i];
+    vector<string> arg(argv, argv + argc);
 
     if(argc > 1 && arg[1].substr(0, 1) == "-")
     {
