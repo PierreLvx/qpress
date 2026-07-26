@@ -1,16 +1,20 @@
 
 #include <sys/stat.h>
+
+// windows.h must be included before <string> (via utilities.hpp) pulls in std::byte and
+// "using namespace std" below - otherwise the plain "byte" typedefs used internally by
+// windows.h's RPC headers become ambiguous with std::byte.
+#if defined(_WIN32) || defined(__WIN32__) || defined(_WIN64)
+  #include <windows.h>
+#else
+  #include <sys/time.h>
+#endif
+
 #include <string>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "utilities.hpp"
-
-#ifdef WINDOWS
-  #include <windows.h>
-#else
-  #include <sys/time.h>
-#endif
 
 using namespace std;
 
@@ -32,7 +36,7 @@ char *absolute_path(char *source, char *destination)
 #endif
 }
 
-string lcase(string &str)
+string lcase(string str)
 {
 	//change each element of the string to lower case
 	string s = str;
@@ -220,11 +224,7 @@ string delimiter(long long l)
 
     memset(s, 0, 25);
     memset(d, 0, 25);
-#ifdef WINDOWS
-    sprintf(s, "%I64d", l);
-#else
     snprintf(s, sizeof(s), "%lld", l);
-#endif
     for(i = 0; i < strlen(s); i++)
     {
         if((strlen(s) - i) % 3 == 0 && i != 0)

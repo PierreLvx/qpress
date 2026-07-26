@@ -89,6 +89,17 @@ and finally outputs an UPDIR:
 #include <sys/stat.h>
 #include <stdlib.h>
 #include <stdio.h>
+
+// windows.h must be included before <string>/<vector> pull in std::byte (via <cstddef>) and
+// "using namespace std" below - otherwise the plain "byte" typedefs used internally by
+// windows.h's RPC headers become ambiguous with std::byte.
+#if defined(_WIN32) || defined(__WIN32__) || defined(_WIN64)
+  #include <fcntl.h>
+  #include <time.h>
+  #include <windows.h>
+  #include <io.h>
+#endif
+
 #include "aio.hpp"
 #include <stdarg.h>
 #include <string>
@@ -100,19 +111,15 @@ and finally outputs an UPDIR:
     #include <unistd.h>
 #endif
 
-using namespace std;
-
 #ifdef WINDOWS
-  #include <fcntl.h>
-  #include <time.h>
-  #include <windows.h>
-  #include <io.h>
   #include "dirent_win.h"
   #include "pthread.h"
 #else
   #include "dirent.h"
   #include <pthread.h>
 #endif
+
+using namespace std;
 
 #if QLZ_STREAMING_BUFFER != 0
 #error QLZ_STREAMING_BUFFER must be 0
@@ -917,7 +924,7 @@ void compress_directory(string base_dir, string pattern)
     if(recursive_flag && (dir = opendir(void2curdir(api_path).c_str())))
 	{
 #ifdef WINDOWS
-        while((entry = readdir_wildcard(dir, "*")))
+        while((entry = readdir_wildcard(dir, (char *)"*")))
 #else
         while((entry = readdir(dir)))
 #endif
@@ -1084,7 +1091,6 @@ int main(int argc, char* argv[])
 #ifdef WINDOWS
     setmode(fileno(stdin), _O_BINARY);
     setmode(fileno(stdout), _O_BINARY);
-    pthread_win32_process_attach_np ();
 #endif
 
 // In-memory benchmark

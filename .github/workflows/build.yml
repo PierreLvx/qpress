@@ -39,8 +39,8 @@ jobs:
     strategy:
       matrix:
         os:
-          - windows-2019
           - windows-2022
+          - windows-2025
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -50,7 +50,7 @@ jobs:
           install: mingw-w64-x86_64-gcc make
       - name: Build
         shell: msys2 {0}
-        run: g++ -O3 -DWINDOWS -o qpress.exe -x c quicklz.c -x c++ qpress.cpp aio.cpp utilities.cpp dirent_win.c -lpthread -Wall -Wextra -Werror
+        run: g++ -O3 -o qpress.exe -x c quicklz.c -x c++ qpress.cpp aio.cpp utilities.cpp dirent_win.c -lpthread -Wall -Wextra -Werror
       - name: Test
         shell: msys2 {0}
         run: ./qpress.exe -v readme.md readme.qp

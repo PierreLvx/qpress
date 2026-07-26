@@ -22,18 +22,22 @@ aio_init() is called with buffered_io = true.
 //#define PRE_ALLOCATE
 
 #include "aio.hpp"
-#include "utilities.hpp"
 
-#include <stdio.h>
-
-#define _CRT_SECURE_NO_WARNINGS
-
-#ifdef WINDOWS
+// windows.h must be included before utilities.hpp pulls in <string> ("using namespace std")
+// - otherwise the plain "byte" typedefs used internally by windows.h's RPC headers become
+// ambiguous with std::byte.
+#if defined(_WIN32) || defined(__WIN32__) || defined(_WIN64)
     #define handle_type HANDLE
     #include <windows.h>
 #else
     #define handle_type FILE *
 #endif
+
+#include "utilities.hpp"
+
+#include <stdio.h>
+
+#define _CRT_SECURE_NO_WARNINGS
 
 static size_t largest_request_pub;
 static bool buffering = true;
