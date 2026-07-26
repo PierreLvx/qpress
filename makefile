@@ -1,12 +1,22 @@
-PREFIX = /usr/local
+DESTDIR ?=
+PREFIX ?= /usr/local
+CXX ?= g++
+CXXFLAGS ?= -O3
+CXXFLAGS += -Wall -Wextra -Werror
+LDFLAGS ?=
 
-g++:	qpress.cpp aio.cpp quicklz.c utilities.cpp
-	g++ -O3 -o qpress -x c quicklz.c -x c++ qpress.cpp aio.cpp utilities.cpp -lpthread -Wall -Wextra -Werror
+all: qpress
+
+qpress:	qpress.cpp aio.cpp quicklz.c utilities.cpp
+	$(CXX) $(CXXFLAGS) -o qpress -x c quicklz.c -x c++ qpress.cpp aio.cpp utilities.cpp -lpthread $(LDFLAGS)
 
 install: qpress
-	install -m 0755 qpress $(PREFIX)/bin
+	install -d $(DESTDIR)$(PREFIX)/bin
+	install -m 0755 qpress $(DESTDIR)$(PREFIX)/bin
 
 clean:
 	rm -f qpress
 
-.PHONY: clean install g++
+g++: qpress
+
+.PHONY: all clean install g++
