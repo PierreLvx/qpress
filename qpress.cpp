@@ -133,6 +133,9 @@ using namespace std;
 	#ifndef PROCESS_MODE_BACKGROUND_BEGIN
 	    #define PROCESS_MODE_BACKGROUND_BEGIN   0x00100000
     #endif
+	#ifndef THREAD_MODE_BACKGROUND_BEGIN
+	    #define THREAD_MODE_BACKGROUND_BEGIN    0x00010000
+    #endif
 #else
 	#define CURDIR "./"
     #define DELIM_STR "/"
@@ -154,6 +157,11 @@ bool recursive_flag = false;
 bool decompress_flag = false;
 bool recover_flag = false;
 bool benchmark_flag = false;
+// -P1: THREAD_MODE_BACKGROUND_BEGIN is applied per-thread rather than via the process-wide
+// PROCESS_MODE_BACKGROUND_BEGIN, which caps the whole process's working set at ~32 MiB and can
+// slow down compression/decompression by 250x-800x once that cap is exceeded (see qpress issue #13
+// and https://randomascii.wordpress.com/2023/10/01/32-mib-working-sets-on-a-64-gib-machine/)
+bool background_priority_flag = false;
 unsigned long long compress_chunk_size = DEFAULT_COMPRESS_CHUNK_SIZE;
 unsigned int compression_level = DEFAULT_COMPRESSION_LEVEL;
 unsigned int threads = DEFAULT_THREAD_COUNT;
@@ -300,11 +308,18 @@ void parse_flags(int argc, char* argv[])
             switch(int_flag(arg[1], "P"))
             {
                 case 1:
-					if (!SetPriorityClass(GetCurrentProcess(), PROCESS_MODE_BACKGROUND_BEGIN))
+					// Deliberately not using PROCESS_MODE_BACKGROUND_BEGIN here: it also lowers the
+					// process's memory priority, which makes Windows cap the whole process's working
+					// set at ~32 MiB - causing massive slowdowns once compression/decompression touches
+					// more memory than that. Applying THREAD_MODE_BACKGROUND_BEGIN per-thread instead
+					// gives the same lowered CPU/disk I/O priority without that working-set cap.
+					if (!SetThreadPriority(GetCurrentThread(), THREAD_MODE_BACKGROUND_BEGIN))
 					{
 						PRINT(WARNING, "%s%s: -P1 not supported by this OS - using -P2 instead\n", BLANK_LINE, "qpress");
 						SetPriorityClass(GetCurrentProcess(), IDLE_PRIORITY_CLASS);
 					}
+					else
+						background_priority_flag = true;
 					break;
                 case 2: SetPriorityClass(GetCurrentProcess(), IDLE_PRIORITY_CLASS); break;
                 case 3: SetPriorityClass(GetCurrentProcess(), NORMAL_PRIORITY_CLASS); break;
@@ -381,8 +396,8 @@ void print_usage()
     "    -B   Windows only: Disable file system caching (FILE_FLAG_NO_BUFFERING) to\n"
     "         prevent cache of other applications from being be flushed. Keep\n"
     "         enabled if files are small and need further processing\n"
-    "    -Pn  Windows only: Set CPU and disk I/O priority to n where 1 = BACKGORUND\n"
-	"         (Vista, 7, 2008 only), 2 = IDLE, 3 = NORMAL or 4 = ABOVE (default = 3)\n\n"
+    "    -Pn  Windows only: Set CPU and disk I/O priority to n where 1 = BACKGROUND,\n"
+	"         2 = IDLE, 3 = NORMAL or 4 = ABOVE (default = 3)\n\n"
     "Examples of compression:\n"
 #ifdef WINDOWS
     "    qpress -rv d:\\dir\\* database.qp\n"
@@ -465,9 +480,20 @@ void mem_init(size_t chunk_size)
     }
 }
 
+// Propagates the -P1 background priority (see background_priority_flag above) to worker threads,
+// since THREAD_MODE_BACKGROUND_BEGIN only affects the thread that calls it.
+void apply_background_priority()
+{
+#ifdef WINDOWS
+    if(background_priority_flag)
+        SetThreadPriority(GetCurrentThread(), THREAD_MODE_BACKGROUND_BEGIN);
+#endif
+}
+
 void *benchmark_compress_thread(void *arg)
 {
     unsigned long long y = 0;
+    apply_background_priority();
     size_t id = (size_t)arg;
     double t = GetTickCount();
 	while(GetTickCount() == t) {};
@@ -485,6 +511,7 @@ void *benchmark_compress_thread(void *arg)
 
 void *benchmark_decompress_thread(void *arg)
 {
+    apply_background_priority();
     unsigned long long y = 0;
     size_t id = (size_t)arg;
     double t = GetTickCount();
@@ -647,6 +674,7 @@ void recover(void)
 
 void *decompress_file_thread(void *arg)
 {
+    apply_background_priority();
     size_t thread_id = (size_t)arg;
     bool just_recovered_block = false;
     recovery_file_written = 0;
@@ -763,6 +791,7 @@ void decompress_file(string dest_file)
 
 void *compress_file_thread(void *arg)
 {
+    apply_background_priority();
     size_t read;
     do
     {
