@@ -2,7 +2,7 @@
 
 This repo is a copy of the latest [publicly available](http://www.quicklz.com/) version of `qpress`, with several patches, including MacOS compatibility.
 
-Please see the CircleCI build matrix for a list of tested build environments.
+Please see the GitHub Actions build matrix for a list of tested build environments.
 
 Pull requests are welcome.
 
