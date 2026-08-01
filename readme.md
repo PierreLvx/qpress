@@ -8,6 +8,26 @@ Please see the CircleCI build matrix for a list of tested build environments.
 
 Pull requests are welcome.
 
+## Installation
+
+### macOS (Homebrew)
+
+```
+brew tap PierreLvx/qpress
+brew install qpress
+```
+
+### From source
+
+Requires a C++ compiler (e.g. Xcode Command Line Tools on macOS, `xcode-select --install`).
+
+```
+git clone git@github.com:PierreLvx/qpress.git
+cd qpress
+make
+make install
+```
+
 ## Usage
 
 ```
