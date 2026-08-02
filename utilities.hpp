@@ -18,7 +18,6 @@ using namespace std;
 	#include <pthread.h>
 #endif
 
-#define _CRT_SECURE_NO_WARNINGS
 string lcase(string str);
 string remove_leading_curdir(string path);
 string remove_delimitor(string path);

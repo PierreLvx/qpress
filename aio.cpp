@@ -37,8 +37,6 @@ aio_init() is called with buffered_io = true.
 
 #include <stdio.h>
 
-#define _CRT_SECURE_NO_WARNINGS
-
 static size_t largest_request_pub;
 static bool buffering = true;
 
