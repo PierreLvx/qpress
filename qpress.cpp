@@ -293,7 +293,6 @@ void parse_flags(int argc, char* argv[])
         decompress_flag = arg[1].find_first_of("d") != string::npos ? true : false;
         recursive_flag = arg[1].find_first_of("r") != string::npos ? true : false;
         verbose_flag = arg[1].find_first_of("v") != string::npos ? true : false;
-        output_pipe = arg[1].find_first_of("o") != string::npos ? true : false;
         benchmark_flag = arg[1].find_first_of("m") != string::npos ? true : false;
         recover_flag = arg[1].find_first_of("R") != string::npos ? true : false;
         force_flag = arg[1].find_first_of("f") != string::npos ? true : false;
