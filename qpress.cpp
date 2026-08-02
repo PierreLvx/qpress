@@ -972,18 +972,22 @@ void compress_directory(string base_dir, string pattern)
 
 bool check_if_path_has_dir_traversal(char * new_path)
 {
-    bool ret_val = false;
-    char *found_template1 = NULL;
-	found_template1 = strstr (new_path,"../");
-	#ifdef WINDOWS 
-	    char *found_template2 = NULL;
-	    found_template2 = strstr (new_path,"..\\");
-	    ret_val = (found_template1 !=  NULL) || (found_template2 != NULL);
-	#else
-	    ret_val = found_template1 !=  NULL;
-	#endif
-    
-    return ret_val;
+    // Reject any "/" or "\" delimited path component that is exactly "..", whether
+    // embedded (foo/../bar) or the whole (delimiter-free) string ("..") - archives
+    // are portable across platforms, so both delimiters are checked regardless of
+    // the platform we're running on.
+    size_t start = 0;
+    for(size_t i = 0; ; i++)
+    {
+        if(new_path[i] == '/' || new_path[i] == '\\' || new_path[i] == '\0')
+        {
+            if(i - start == 2 && new_path[start] == '.' && new_path[start + 1] == '.')
+                return true;
+            if(new_path[i] == '\0')
+                return false;
+            start = i + 1;
+        }
+    }
 }
 
 void decompress_directory(string extract_dir, bool std_out)
