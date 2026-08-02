@@ -721,7 +721,9 @@ void *decompress_file_thread(void *arg)
 
         crc_original = fread32();
         try_aread(src[thread_id], 9);
-        if (QLZ_SIZE_COMPRESSED(src[thread_id]) > compress_chunk_size + QLZ_SIZE_OVERHEAD)
+        // Lower bound prevents "QLZ_SIZE_COMPRESSED(...) - 9" (both size_t) from
+        // underflowing into a huge read count on a crafted/corrupt block.
+        if (QLZ_SIZE_COMPRESSED(src[thread_id]) < 9 || QLZ_SIZE_COMPRESSED(src[thread_id]) > compress_chunk_size + QLZ_SIZE_OVERHEAD)
             abort("Data error, not recoverable"); // todo, it is recoverable, but code is not implemented yet
 
         try_aread(src[thread_id] + 9, QLZ_SIZE_COMPRESSED(src[thread_id]) - 9);
