@@ -1011,7 +1011,7 @@ void decompress_directory(string extract_dir, bool std_out)
         {
 			// read directory name, append it to current path and create the directory
             chunk_size = fread32();
-			if(NAME_BUFFER_SIZE < chunk_size + 1)
+			if(chunk_size >= (unsigned int)NAME_BUFFER_SIZE)
             {
                 abort("File path string is bigger than buffer size");
             }
@@ -1040,7 +1040,7 @@ void decompress_directory(string extract_dir, bool std_out)
         else if(c == 'F')
         {
             chunk_size = fread32(); // read length of file name
-            if(NAME_BUFFER_SIZE < chunk_size + 1)
+            if(chunk_size >= (unsigned int)NAME_BUFFER_SIZE)
 	             {
 	                 abort("File path string is bigger than buffer size");
 	             }
