@@ -1,6 +1,6 @@
 # qpress - Portable high-speed file archiver
 
-This repo is a copy of the latest [publicly available](http://www.quicklz.com/) version of `qpress`, with several patches, including MacOS compatibility.
+This repo is a copy of the latest publicly available version of `qpress`, with several patches (performance, cleanup, security), including MacOS compatibility.
 
 Please see the GitHub Actions build matrix for a list of tested build environments.
 
