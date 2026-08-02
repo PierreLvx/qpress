@@ -325,6 +325,12 @@ bool aclose_write(void)
 
 bool aopen_write(const char *file)
 {
+    // destination_file is a fixed-size buffer; a path this long would overflow it.
+    // Fail here so the caller (try_aopen) reports a clean "error creating file"
+    // instead of strcpy() writing past the end of the buffer.
+    if(strlen(file) >= sizeof(destination_file))
+        return false;
+
     strcpy(destination_file, file);
     written = 0;
     last_extended_to = 0;
