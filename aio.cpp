@@ -250,7 +250,7 @@ size_t awrite(const void *src, size_t size)
         size_t n;
 
         if(size > largest_request_pub)
-            abort("Internal error, aread(%d) with largest_request == %d", (int)size, (int)largest_request_pub);
+            abort("Internal error, awrite(%d) with largest_request == %d", (int)size, (int)largest_request_pub);
 
         memcpy(write_buffer + queued, src, size);
         queued += size;
