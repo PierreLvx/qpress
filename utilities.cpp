@@ -66,6 +66,9 @@ void reverse(char s[])
     unsigned char c;
     unsigned int i;
 
+    if(s[0] == '\0')
+        return;
+
     for (i = 0, j = strlen(s)-1; i<j; i++, j--) {
         c = s[i];
         s[i] = s[j];
